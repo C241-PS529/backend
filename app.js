@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -14,8 +15,14 @@ const authMiddleware = require('./middleware/authMiddleware');
 const app = express();
 
 app.use(morgan('combined'));
-app.use(cors());
 app.use(bodyParser.json());
+
+const corsOptions = {
+  origin: ['https://backend-qpweor334a-et.a.run.app'],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -27,8 +34,8 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
-        description: 'Development server'
+        url: 'https://backend-qpweor334a-et.a.run.app',
+        description: 'Production server'
       }
     ],
     components: {
@@ -51,9 +58,11 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/auth', authRoutes);
+app.use('/diseases', authMiddleware);
 app.use('/diseases', diseasesRoutes);
 app.use('/users', usersRoutes);
 app.use('/news', newsRoutes);
+
 
 app.get('/', (req, res) => {
   res.send('Welcome to the Diseases Predictor API');
