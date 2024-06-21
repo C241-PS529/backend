@@ -76,7 +76,6 @@ const diseaseUrls = {
     ],
 };
 
-
 const getDiseaseInfo = async (disease) => {
   const urls = diseaseUrls[disease.toUpperCase()];
   if (!urls || urls.length === 0) {
@@ -84,24 +83,22 @@ const getDiseaseInfo = async (disease) => {
     return null;
   }
 
-  let results = [];
-  for (const { url, title } of urls) {
+  let results = await Promise.all(urls.map(async ({ url, title }) => {
     try {
       console.log(`Fetching URL: ${url}`);
       const { data } = await axios.get(url);
       const $ = cheerio.load(data);
 
-      // Update selectors as per the actual HTML structure of the target websites
       const summary = $('meta[name="description"]').attr('content') || 'No description available';
-
       console.log({ title, summary, url });
-      results.push({ title, summary, url });
+      return { title, summary, url };
     } catch (error) {
       console.error('Error fetching data from URL:', url, error);
+      return null;
     }
-  }
+  }));
 
-  return results;
+  return results.filter(result => result !== null);
 };
 
 module.exports = { getDiseaseInfo };

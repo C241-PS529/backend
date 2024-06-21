@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const authMiddleware = require('../middleware/authMiddleware');
 const User = require('../models/user');
+const authenticateToken = require('../middleware/authMiddleware');
 
 /**
  * @swagger
@@ -45,11 +45,8 @@ const User = require('../models/user');
  *         description: Internal Server Error
  */
 
-// Middleware untuk memverifikasi token
-router.use(authMiddleware);
-
 // Endpoint untuk mendapatkan profil pengguna
-router.get('/profile', async (req, res) => {
+router.get('/profile', authenticateToken, async (req, res) => {
     try {
         const user = await User.findByPk(req.userId);
         if (!user) {

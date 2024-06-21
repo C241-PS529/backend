@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const diseasesController = require('../controllers/diseasescontroller');
-const authenticateToken = require('../middleware/authMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 
 /**
  * @swagger
@@ -56,7 +56,7 @@ const authenticateToken = require('../middleware/authMiddleware');
  *                 $ref: '#/components/schemas/Disease'
  */
 
-router.get('/', authenticateToken, diseasesController.getAllDiseases);
+router.get('/', diseasesController.getAllDiseases);
 
 /**
  * @swagger
@@ -82,7 +82,7 @@ router.get('/', authenticateToken, diseasesController.getAllDiseases);
  *         description: The disease was not found
  */
 
-router.get('/:id', authenticateToken, diseasesController.getDiseasesById);
+router.get('/:id', diseasesController.getDiseasesById);
 
 /**
  * @swagger
@@ -108,6 +108,6 @@ router.get('/:id', authenticateToken, diseasesController.getDiseasesById);
  *         description: The disease was not found
  */
 
-router.get('/by-idname/:id_name', authenticateToken, diseasesController.getDiseasesByIdName);
+router.get('/by-idname/:id_name', diseasesController.getDiseasesByIdName);
 
 module.exports = router;

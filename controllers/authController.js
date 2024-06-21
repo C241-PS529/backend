@@ -15,21 +15,21 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    try {
+  try {
       console.log(req.body);
       const { email, password } = req.body;
       const user = await User.findOne({ where: { email } });
       if (!user) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+          return res.status(401).json({ error: 'Invalid credentials' });
       }
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+          return res.status(401).json({ error: 'Invalid credentials' });
       }
-      const token = jwt.sign({ userId: user.id_user }, 'your_jwt_secret', { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user.id_user }, 'your_jwt_secret');
       res.json({ token });
-    } catch (error) {
+  } catch (error) {
       console.error('Error during login:', error);
       res.status(500).json({ error: 'Internal Server Error' });
-    }
-  };
+  }
+};

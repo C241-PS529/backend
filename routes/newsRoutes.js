@@ -25,6 +25,6 @@ const { getDiseaseInfo } = require('../utils/scraper');
  *       500:
  *         description: Internal Server Error
  */
-router.get('/:disease', authenticateToken, newsController.getNews);
+router.get('/:disease', newsController.getNews);
 
 module.exports = router;
